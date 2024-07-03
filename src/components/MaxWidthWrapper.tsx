@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { MaxWidthWrapperProps } from "../../types";
 
 const MaxWidthWrapper = ({ className, children }: MaxWidthWrapperProps) => {
   return (
