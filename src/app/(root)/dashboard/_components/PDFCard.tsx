@@ -78,7 +78,7 @@ const PDFCard = ({ file }: { file: File }) => {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleClick}
-                className="text-destructive-foreground bg-destructive"
+                className="text-destructive-foreground bg-destructive hover:bg-destructive-foreground hover:text-destructive"
               >
                 Continue
               </AlertDialogAction>

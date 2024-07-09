@@ -1,10 +1,15 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+  if (user) redirect("/dashboard");
   return (
     <>
       <MaxWidthWrapper className="mb-12 mt-28 sm:mt-40 flex-center flex-col text-center">
