@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/components/ui/use-toast";
 import { useUploadThing } from "@/lib/uploadthing";
 import { getRandom } from "@/lib/utils";
-import { CloudUpload, File } from "lucide-react";
+import { CloudUpload, File, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 import Dropzone from "react-dropzone";
@@ -127,6 +127,16 @@ const UploadDropzone = () => {
                     value={uploadProgress}
                     className="h-1 w-full bg-white"
                   />
+                  {uploadProgress === 100 ? (
+                    <div className="flex-center gap-1 text-sm text-primary font-semibold text-center pt-2">
+                      <Loader2 className="animate-spin h-3 w-3" />
+                      Redirecting...
+                    </div>
+                  ) : (
+                    <p className="text-xs font-semibold text-muted mt-1 text-right">
+                      Uploading... {uploadProgress}%
+                    </p>
+                  )}
                 </div>
               ) : null}
 
