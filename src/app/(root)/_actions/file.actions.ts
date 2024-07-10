@@ -11,6 +11,21 @@ export const getFiles = async (userId: string) => {
   }
 };
 
+export const getFileById = async ({
+  fileId,
+  userId,
+}: {
+  fileId: string;
+  userId: string;
+}) => {
+  try {
+    const file = await db.file.findUnique({ where: { id: fileId, userId } });
+    return file;
+  } catch (error: any) {
+    console.log(error.message);
+  }
+};
+
 export const deleteFile = async ({
   fileId,
   userId,
