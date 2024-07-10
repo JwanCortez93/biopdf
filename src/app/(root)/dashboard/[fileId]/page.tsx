@@ -1,8 +1,8 @@
-import { redirect } from "next/navigation";
-import { getFileById } from "../../_actions/file.actions";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import PDFRenderer from "../_components/PDFRenderer";
+import { redirect } from "next/navigation";
+import { getFileByIdOrKey } from "../../_actions/file.actions";
 import ChatWrapper from "../_components/ChatWrapper";
+import PDFRenderer from "../_components/PDFRenderer";
 
 const FilePage = async ({ params }: { params: { fileId: string } }) => {
   const { fileId } = params;
@@ -12,7 +12,7 @@ const FilePage = async ({ params }: { params: { fileId: string } }) => {
 
   if (!user || !user.id) redirect(`auth-callback?origin=dashboard/${fileId}`);
 
-  const file = await getFileById({ fileId, userId: user.id });
+  const file = await getFileByIdOrKey({ fileId, userId: user.id });
 
   if (!file) {
     redirect("/not-found?origin=dashboard&type=file");

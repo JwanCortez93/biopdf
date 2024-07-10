@@ -11,15 +11,24 @@ export const getFiles = async (userId: string) => {
   }
 };
 
-export const getFileById = async ({
+export const getFileByIdOrKey = async ({
   fileId,
+  key,
   userId,
 }: {
-  fileId: string;
+  fileId?: string;
+  key?: string;
   userId: string;
 }) => {
   try {
-    const file = await db.file.findUnique({ where: { id: fileId, userId } });
+    if (!fileId && !key) throw new Error();
+    const file = fileId
+      ? await db.file.findUnique({
+          where: { id: fileId, userId },
+        })
+      : key
+      ? await db.file.findUnique({ where: { key, userId } })
+      : null;
     return file;
   } catch (error: any) {
     console.log(error.message);

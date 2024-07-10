@@ -3,11 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/components/ui/use-toast";
+import { useUploadThing } from "@/lib/uploadthing";
 import { getRandom } from "@/lib/utils";
 import { CloudUpload, File } from "lucide-react";
 import { useState } from "react";
 
 import Dropzone from "react-dropzone";
+import { getFileByIdOrKey } from "../../_actions/file.actions";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { redirect, useRouter } from "next/navigation";
 
 const UploadButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,6 +40,10 @@ const UploadButton = () => {
 const UploadDropzone = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const { startUpload } = useUploadThing("pdfUploader");
+  const { toast } = useToast();
+  const { user } = useKindeBrowserClient();
+  const router = useRouter();
 
   const startSimulatedProgress = () => {
     setUploadProgress(0);
@@ -56,9 +65,30 @@ const UploadDropzone = () => {
       onDrop={async (acceptedFiles) => {
         setIsUploading(true);
         const progressInterval = startSimulatedProgress();
-        await new Promise((r) => setTimeout(r, 10000));
+        const res = await startUpload(acceptedFiles);
+        if (!res) {
+          return toast({
+            variant: "destructive",
+            title: "Something went wrong",
+            description: "Please try again later",
+          });
+        }
+
+        const [fileResponse] = res;
+        const key = fileResponse.key;
+        if (!key)
+          return toast({
+            variant: "destructive",
+            title: "Something went wrong",
+            description: "Please try again later",
+          });
+
         clearInterval(progressInterval);
         setUploadProgress(100);
+        const file = await getFileByIdOrKey({ userId: user!.id, key });
+        console.log(file);
+
+        router.push(`/dashboard/${file!.id}`);
       }}
     >
       {({ getRootProps, getInputProps, acceptedFiles }) => (
@@ -99,6 +129,13 @@ const UploadDropzone = () => {
                   />
                 </div>
               ) : null}
+
+              <input
+                {...getInputProps}
+                type="file"
+                id="dropzone-file"
+                className="hidden"
+              />
             </label>
           </div>
         </div>
