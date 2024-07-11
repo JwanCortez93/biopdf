@@ -35,6 +35,21 @@ export const getFileByIdOrKey = async ({
   }
 };
 
+export const getFileUploadStatus = async ({
+  fileId,
+  userId,
+}: {
+  fileId: string;
+  userId: string;
+}) => {
+  const file = await db.file.findUnique({
+    where: { id: fileId, userId },
+    select: { uploadStatus: true },
+  });
+  if (!file) return { status: "PENDING" as const };
+  return { status: file.uploadStatus };
+};
+
 export const deleteFile = async ({
   fileId,
   userId,
