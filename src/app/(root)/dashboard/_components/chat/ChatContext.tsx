@@ -29,8 +29,11 @@ export const ChatContextProvider = ({
     setMessage(e.target.value);
   };
 
-  const addMessage = async () =>
+  const addMessage = async () => {
+    setIsLoading(true);
     await sendMessage({ fileId, message, userId: user!.id });
+    setIsLoading(false);
+  };
 
   return (
     <ChatContext.Provider

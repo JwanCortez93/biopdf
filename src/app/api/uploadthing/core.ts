@@ -7,12 +7,6 @@ import { pinecone } from "@/lib/pinecone";
 import { CohereEmbeddings } from "@langchain/cohere";
 import { PineconeStore } from "@langchain/pinecone";
 
-const cohere = new CohereEmbeddings({
-  apiKey: process.env.COHERE_API_KEY as string,
-  batchSize: 48,
-  model: "embed-english-v3.0",
-});
-
 const f = createUploadthing();
 
 export const ourFileRouter = {
@@ -48,7 +42,13 @@ export const ourFileRouter = {
 
         const pineconeIndex = pinecone.Index("biopdf");
 
-        await PineconeStore.fromDocuments(pageLevelDocs, cohere, {
+        const embeddings = new CohereEmbeddings({
+          apiKey: process.env.COHERE_API_KEY as string,
+          batchSize: 48,
+          model: "embed-english-v3.0",
+        });
+
+        await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
           pineconeIndex,
           namespace: createdFile.id,
         });

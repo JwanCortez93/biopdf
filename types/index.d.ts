@@ -33,3 +33,25 @@ declare type ChatContextProviderProps = {
   fileId: string;
   children: ReactNode;
 };
+
+declare type getMessagesParams = {
+  fileId: string;
+  userId: string;
+  limit?: number;
+  cursor?: string;
+};
+
+declare type MessageProps = {
+  message: {
+    text: string | JSX.Element;
+    id: string;
+    createdAt: Date | string;
+    isUserMessage: boolean;
+  };
+  isNextMessageSamePerson: boolean;
+};
+
+declare type MessagesProps = {
+  fileId: string;
+  userId: string;
+};

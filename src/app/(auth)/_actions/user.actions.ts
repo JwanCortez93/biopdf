@@ -18,7 +18,6 @@ export const createUser = async ({
   email: string;
   id: string;
 }) => {
-  console.log("TEST");
   try {
     const newUser = await db.user.create({ data: { email, id } });
     return newUser;
